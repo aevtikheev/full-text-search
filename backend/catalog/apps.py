@@ -1,5 +1,3 @@
-"""Settings for Catalog app."""
-
 from django.apps import AppConfig
 
 
