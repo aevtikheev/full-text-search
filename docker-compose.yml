@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+    command: [ "bash", "start.sh" ]
+    ports:
+      - 8080:8000
+    environment:
+      - SECRET_KEY=secret
+      - DEBUG=True
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=postgres
+      - SQL_USER=postgres
+      - SQL_PASSWORD=postgres
+      - SQL_HOST=db
+      - SQL_PORT=5432
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - db
+
+  db:
+    environment:
+      - POSTGERS_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    image: postgres:13.2
+    expose:
+      - 5432
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
