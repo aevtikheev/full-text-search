@@ -1,5 +1,6 @@
 """Django settings for full_text_search project."""
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -8,6 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG')
+
+TESTING = 'test' in sys.argv
 
 ALLOWED_HOSTS = []
 
@@ -26,6 +29,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'django_filters',
+    'debug_toolbar',
 ]
 
 LOCAL_APPS = ['catalog.apps.CatalogConfig']
@@ -33,6 +37,7 @@ LOCAL_APPS = ['catalog.apps.CatalogConfig']
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -114,7 +119,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_ROOT = Path(BASE_DIR / 'static')
+
+STATIC_URL = '/staticfiles/'
 
 
 # DRF
@@ -124,3 +131,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
 }
+
+
+# Debug Toolbar
+
+DEBUG_TOOLBAR_CONFIG = {'SHOW_TOOLBAR_CALLBACK': lambda x: bool(DEBUG)}
