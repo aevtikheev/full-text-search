@@ -65,3 +65,14 @@ class ViewTests(APITestCase):
 
         self.assertEqual(2, len(response_results))
         self.assertListEqual([3, 4], [item['id'] for item in response_results])
+
+    def test_search_vector_populated_on_save(self):
+        wine = Wine.objects.create(
+            country='US',
+            points=80,
+            price=1.99,
+            variety='Pinot Grigio',
+            winery='Charles Shaw',
+        )
+        wine = Wine.objects.get(id=wine.id)
+        self.assertEqual("'charl':3A 'grigio':2A 'pinot':1A 'shaw':4A", wine.search_vector)
