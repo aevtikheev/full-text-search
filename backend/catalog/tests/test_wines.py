@@ -35,15 +35,15 @@ class ViewTests(APITestCase):
         response = self.client.get('/api/v1/catalog/wines/?query=wine')
         response_results = response.data['results']
 
-        self.assertEqual(3, len(response_results))
-        self.assertCountEqual([1, 2, 3], [item['id'] for item in response_results])
+        self.assertEqual(4, len(response_results))
+        self.assertCountEqual([1, 2, 3, 4], [item['id'] for item in response_results])
 
     def test_can_filter_on_country(self):
         response = self.client.get('/api/v1/catalog/wines/?country=France')
         response_results = response.data['results']
 
-        self.assertEqual(1, len(response_results))
-        self.assertEqual(3, response_results[0]['id'])
+        self.assertEqual(2, len(response_results))
+        self.assertCountEqual([3, 4], [item['id'] for item in response_results])
 
     def test_can_filter_on_points(self):
         response = self.client.get('/api/v1/catalog/wines/?points=87')
@@ -58,3 +58,10 @@ class ViewTests(APITestCase):
 
         self.assertEqual(0, len(response_results))
         self.assertEqual(response_results, [])
+
+    def test_search_results_returned_in_correct_order(self):
+        response = self.client.get('/api/v1/catalog/wines/?query=Chardonnay')
+        response_results = response.data['results']
+
+        self.assertEqual(2, len(response_results))
+        self.assertListEqual([3, 4], [item['id'] for item in response_results])
