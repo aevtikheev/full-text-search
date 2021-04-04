@@ -14,11 +14,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Wine',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
                 ('country', models.CharField(max_length=255)),
                 ('description', models.TextField(blank=True)),
                 ('points', models.IntegerField()),
-                ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
+                (
+                    'price',
+                    models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True),
+                ),
                 ('variety', models.CharField(max_length=255)),
                 ('winery', models.CharField(max_length=255)),
             ],

@@ -5,8 +5,8 @@ from catalog.models import calculate_wine_search_vector
 
 
 def update_search_vector(apps, schema_editor):
-    Wine = apps.get_model('catalog', 'Wine')
-    Wine.objects.all().update(search_vector=calculate_wine_search_vector())
+    wine_model = apps.get_model('catalog', 'Wine')
+    wine_model.objects.all().update(search_vector=calculate_wine_search_vector())
 
 
 class Migration(migrations.Migration):

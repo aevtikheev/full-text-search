@@ -23,6 +23,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='wine',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['search_vector'], name='search_vector_gin_idx'),
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=['search_vector'], name='search_vector_gin_idx',
+            ),
         ),
     ]
