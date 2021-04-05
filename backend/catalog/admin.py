@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from catalog.models import Wine
+from catalog.models import Wine, WineSearchWord
 
 
 @admin.register(Wine)
@@ -12,3 +12,10 @@ class WineAdmin(admin.ModelAdmin):
     list_filter = ('country', 'variety', 'winery')
     ordering = ('variety',)
     readonly_fields = ('id',)
+
+
+@admin.register(WineSearchWord)
+class WineSearchWordAdmin(admin.ModelAdmin):
+    fields = ('word',)
+    list_display = ('word',)
+    ordering = ('word',)

@@ -1,7 +1,12 @@
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVectorField, SearchVector
+from django.contrib.postgres.search import (
+    SearchQuery, SearchRank, SearchVectorField, SearchVector, TrigramSimilarity,
+)
 from django.db import models
 from django.db.models import F, Q
+
+
+TRIGRAM_SIMILARITY_THRESHOLD = 0.3
 
 
 class WineQuerySet(models.query.QuerySet):
@@ -36,9 +41,18 @@ class Wine(models.Model):
         return f'{self.id}'
 
 
+class WineSearchWordQuerySet(models.query.QuerySet):
+    def search(self, query):
+        return self.annotate(
+            similarity=TrigramSimilarity('word', query),
+        ).filter(similarity__gte=TRIGRAM_SIMILARITY_THRESHOLD).order_by('-similarity')
+
+
 class WineSearchWord(models.Model):
     """Unique words that appear in Wine records. Used for similarity search."""
     word = models.CharField(max_length=255, unique=True)
+
+    objects = WineSearchWordQuerySet.as_manager()
 
     def __str__(self):
         return self.word

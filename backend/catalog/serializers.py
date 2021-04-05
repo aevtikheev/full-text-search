@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from catalog.models import Wine
+from catalog.models import Wine, WineSearchWord
 
 
 class WineSerializer(serializers.ModelSerializer):
@@ -21,3 +21,9 @@ class WineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wine
         fields = ('id', 'country', 'description', 'points', 'price', 'variety', 'winery')
+
+
+class WineSearchWordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WineSearchWord
+        fields = ('word',)
