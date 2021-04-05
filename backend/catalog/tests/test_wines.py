@@ -76,3 +76,12 @@ class ViewTests(APITestCase):
         )
         wine = Wine.objects.get(id=wine.id)
         self.assertEqual("'charl':3A 'grigio':2A 'pinot':1A 'shaw':4A", wine.search_vector)
+
+    def test_description_highlights_matched_words(self):
+        response = self.client.get('/api/v1/catalog/wines/?query=wine')
+        response_results = response.data['results']
+
+        self.assertEqual(
+            'A delicious bottle of <mark>wine</mark>.',
+            response_results[0]['description'],
+        )

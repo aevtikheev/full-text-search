@@ -1,6 +1,19 @@
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVectorField, SearchVector
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVectorField, SearchVector
 from django.db import models
+from django.db.models import F, Q
+
+
+class WineQuerySet(models.query.QuerySet):
+    def search(self, query):
+        search_query = Q(search_vector=SearchQuery(query))
+
+        return self.annotate(
+            variety_headline=SearchHeadline(F('variety'), SearchQuery(query)),
+            winery_headline=SearchHeadline(F('winery'), SearchQuery(query)),
+            description_headline=SearchHeadline(F('description'), SearchQuery(query)),
+            search_rank=SearchRank(F('search_vector'), SearchQuery(query)),
+        ).filter(search_query).order_by('-search_rank', 'id')
 
 
 class Wine(models.Model):
@@ -12,6 +25,8 @@ class Wine(models.Model):
     winery = models.CharField(max_length=255)
     search_vector = SearchVectorField(null=True, blank=True)
 
+    objects = WineQuerySet.as_manager()
+
     class Meta:
         indexes = [
             GinIndex(name='search_vector_gin_idx', fields=['search_vector']),
@@ -19,6 +34,23 @@ class Wine(models.Model):
 
     def __str__(self):
         return f'{self.id}'
+
+
+class WineSearchWord(models.Model):
+    """Unique words that appear in Wine records. Used for similarity search."""
+    word = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.word
+
+
+class SearchHeadline(models.Func):
+    """Highlights the search result with a <mark> tag."""
+    function = 'ts_headline'
+    output_field = models.TextField()
+    template = (
+        '%(function)s(%(expressions)s, \'StartSel = <mark>, StopSel = </mark>, HighlightAll=TRUE\')'
+    )
 
 
 def calculate_wine_search_vector():
