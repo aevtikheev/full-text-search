@@ -1,0 +1,13 @@
+{
+  "results": [
+    {
+      "id": 1,
+      "country": "US",
+      "description": "A youthful, exciting wine that offers plenty of earth and cassis.",
+      "points": 92,
+      "price": "65.00",
+      "variety": "Cabernet Sauvignon",
+      "winery": "Staglin"
+    }
+  ]
+}
