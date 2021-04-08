@@ -11,20 +11,22 @@ import axios from 'axios';
 function App () {
   const [results, setResults] = useState([]);
 
-  const search = async (query) => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: 'http://localhost:8080/api/v1/catalog/wines/',
-      params: {
-        query: query
-      }
-    });
-    setResults(response.data.results);
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const search = async (country, points, query) => {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8080/api/v1/catalog/wines/',
+        params: {
+          country,
+          points,
+          query
+        }
+      });
+      setResults(response.data.results);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Container className='pt-3'>

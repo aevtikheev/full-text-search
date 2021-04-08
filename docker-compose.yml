@@ -33,5 +33,16 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
+  frontend:
+    build:
+      context: ./frontend
+    command: [ "npm", "start" ]
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src/app
+
 volumes:
   db:
